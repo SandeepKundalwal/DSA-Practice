@@ -6,5 +6,6 @@ public class Main {
         int n = 3;
         System.out.println("First Intuition: " + FirstIntuition.generateTrees(n));
         System.out.println("Optimal Code: " + OptimalCode.generateTrees(n));
+        System.out.println("Memoization Code: " + Memoization.generateTrees(n));
     }
 }
