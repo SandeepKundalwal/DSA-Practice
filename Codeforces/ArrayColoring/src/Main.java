@@ -16,11 +16,11 @@ public class Main {
             }
 
             Arrays.sort(a);
-            System.out.println(isPossible(0, false, false, 0, a) ? "YES" : "NO");
+            System.out.println(isPossible(a) ? "YES" : "NO");
         }
     }
 
-    public static boolean isPossible(int index, boolean redUsed, boolean blueUsed, int SUM, int a[]){
+    public static boolean isPossible(int a[]){
         int redSum = 0, blueSum = 0;
         int left = 0, right = a.length - 1;
         int prevLeft = -1, prevRight = -1;
