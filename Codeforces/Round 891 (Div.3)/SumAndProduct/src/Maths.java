@@ -10,6 +10,7 @@ public class Maths {
         }
 
         long sqrtZ = (long) Math.sqrt(z);
+        // not perfect square.
         if(sqrtZ * sqrtZ != z){
             return cnt;
         }
