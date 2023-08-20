@@ -21,16 +21,17 @@ public class Main {
      */
     static List<List<Edge>> allMST = new ArrayList<>();
     public static List<List<Integer>> findCriticalAndPseudoCriticalEdges(int n, int[][] edges) {
+        // Edge Case: Check if all the weights are equal. If yes, all the edges will be pseudo-critical edge
         Edge edge[] = new Edge[edges.length];
         for(int i = 0; i < edges.length; i++){
             edge[i] = new Edge(edges[i][0], edges[i][1], edges[i][2], i);
         }
-        DisjointSet DJ = new DisjointSet(n);
 
         Arrays.sort(edge, (a, b) -> (a.weight - b.weight));
 
         int MSTWeight = 0;
         int edgesAdded = 0;
+        DisjointSet DJ = new DisjointSet(n);
         for(int i = 0; i < edges.length && edgesAdded != n - 1; i++){
             int u = edge[i].src;
             int v = edge[i].dest;
@@ -40,24 +41,12 @@ public class Main {
                 MSTWeight += w;
                 DJ.union(u, v);
                 edgesAdded++;
-                // System.out.print(u + "->" + v + " ");
             }
         }
 
-        //Generate All Spanning Trees O(ElogV + V + noOfSpanningTreesPossible == V^3)
         isPossibleMST(0, MSTWeight, n, edge, new ArrayList<>());
 
-//        for(List<Edge> MST : allMST){
-//            for(Edge e : MST){
-//                System.out.println(e.src + "->" + e.dest + "->" + e.edgeNo);
-//            }
-//            System.out.println();
-//        }
-
-
-
         HashMap<Integer, Integer> edgeFreq = new HashMap<>();
-
         for(List<Edge> MST : allMST){
             for(Edge e : MST){
                 if(!edgeFreq.containsKey(e.edgeNo)){
@@ -107,7 +96,8 @@ public class Main {
         graph.remove(graph.size() - 1);
     }
 
-    public static boolean checkIfValidMST(int MSTWeight, int n, List<Edge> graph){
+    public static  boolean checkIfValidMST(int MSTWeight, int n, List<Edge> graph){
+        int noOfEdgesSelected = 0;
         DisjointSet DJ = new DisjointSet(n);
         int currentMSTWeight = 0;
         for(Edge edge : graph){
@@ -118,13 +108,12 @@ public class Main {
             if(DJ.find(u) != DJ.find(v)){
                 currentMSTWeight += w;
                 DJ.union(u, v);
+                noOfEdgesSelected++;
             }
         }
 
-        for(int i = 1; i < n; i++){
-            if(DJ.parent[i - 1] != DJ.parent[i]){
-                return false;
-            }
+        if(noOfEdgesSelected != n - 1){
+            return false;
         }
 
         return currentMSTWeight == MSTWeight;
