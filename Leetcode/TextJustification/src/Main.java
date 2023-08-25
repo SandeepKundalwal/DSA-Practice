@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class Main {
@@ -11,54 +12,59 @@ public class Main {
 
     public static List<String> fullJustify(String[] words, int maxWidth) {
         List<String> ans = new ArrayList<>();
-        int i = 0;
 
-        while (i < words.length) {
-            List<String> currentLine = getWords(i, words, maxWidth);
-            i += currentLine.size();
-            ans.add(createLine(currentLine, i, words, maxWidth));
+        for(int i = 0; i < words.length;){
+            List<String> wordsInLine = getLineWords(i, words, maxWidth);
+//            for(String word : wordsInLine){
+//                System.out.print(word + " ");
+//            }
+            i += wordsInLine.size();
+            ans.add(generateLine(wordsInLine, maxWidth));
         }
-
         return ans;
     }
 
-    private static List<String> getWords(int i, String[] words, int maxWidth) {
-        List<String> currentLine = new ArrayList<>();
-        int currLength = 0;
+    private static List<String> getLineWords(int i, String[] words, int maxWidth) {
+        List<String> wordsInLine = new ArrayList<>();
+        int lineLength = 0;
 
-        while (i < words.length && currLength + words[i].length() <= maxWidth) {
-            currentLine.add(words[i]);
-            currLength += words[i].length() + 1;
+        while(i < words.length && lineLength + words[i].length() <= maxWidth){
+            wordsInLine.add(words[i]);
+            lineLength += words[i].length() + 1;
             i++;
         }
-
-        return currentLine;
+        return wordsInLine;
     }
 
-    private static String createLine(List<String> line, int i, String[] words, int maxWidth) {
-        int baseLength = -1;
-        for (String word: line) {
-            baseLength += word.length() + 1;
+    private static String generateLine(List<String> line, int maxWidth) {
+        int lenOfLine = 0;
+        int spacesToBeInserted = 0;
+
+        for(String word : line){
+            lenOfLine += word.length();
         }
 
-        int extraSpaces = maxWidth - baseLength;
+        spacesToBeInserted = maxWidth - lenOfLine;
+        StringBuilder finalString = new StringBuilder();
 
-        if (line.size() == 1 || i == words.length) {
-            return String.join(" ", line) + " ".repeat(extraSpaces);
+        if(line.size() == 1){
+            finalString.append(line.get(0)).append(" ".repeat(spacesToBeInserted));
+        } else {
+            for(int idx = 0; idx < line.size() - 1;){
+                line.set(idx, line.get(idx) + " ");
+                spacesToBeInserted--;
+                idx++;
+                if(idx == line.size() - 1 && spacesToBeInserted > 0){
+                    idx = 0;
+                } else if (idx == line.size() - 1 && spacesToBeInserted == 0){
+                    break;
+                }
+            }
+
+            for(String word : line){
+                finalString.append(word);
+            }
         }
-
-        int wordCount = line.size() - 1;
-        int spacesPerWord = extraSpaces / wordCount;
-        int needsExtraSpace = extraSpaces % wordCount;
-
-        for (int j = 0; j < needsExtraSpace; j++) {
-            line.set(j, line.get(j) + " ");
-        }
-
-        for (int j = 0; j < wordCount; j++) {
-            line.set(j, line.get(j) + " ".repeat(spacesPerWord));
-        }
-
-        return String.join(" ",  line);
+        return finalString.toString();
     }
 }
