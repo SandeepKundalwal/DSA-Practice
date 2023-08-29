@@ -1,117 +1,171 @@
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
-
-    static int directions[][] = {
-            {0, -1}, {-1, 0}, {0, 1}, {1, 0}
+    private static int directions[][] = {
+            {-1, 0},{0, 1},{1, 0},{0, -1}
     };
     public static void main(String[] args) {
-        char grid2[][] = {
-                {'#','#','#','#','#','#','#','#'},
-                {'#','M','.','.','A','.','.','#'},
-                {'#','.','#','.','M','#','.','#'},
-                {'#','M','#','.','.','#','.','.'},
-                {'#','.','#','#','#','#','#','#'}
-        };
-
-        char grid1[][] = {
-                {'#','#','#','#','#','#','#','#'},
-                {'#','.','.','.','.','.','A','#'},
-                {'#','.','#','#','#','#','#','#'},
-                {'#','.','.','.','.','.','.','#'},
-                {'#','.','#','#','#','#','.','#'},
-                {'#','.','.','.','.','#','.','#'},
-                {'#','.','#','#','.','#','.','#'},
-                {'#','.','#','M','.','#','.','#'}
-        };
-
         Scanner in = new Scanner(System.in);
         int n = in.nextInt();
         int m = in.nextInt();
 
-        int Ai = 0, Aj = 0;
-        List<int []> monsters = new ArrayList<>();
-        char grid[][] = new char[n][m];
+        if(n == 1 && m == 1){
+            System.out.println("YES");
+            System.out.println(0);
+            return;
+        }
+
+        char labyrinth[][] = new char[n][m];
         for(int i = 0; i < n; i++){
-            String row = in.next();
+            labyrinth[i] = in.next().toCharArray();
+        }
+
+        canReachBoundary(n, m, labyrinth);
+    }
+
+    public static void canReachBoundary(int n, int m, char labyrinth[][]){
+        int iA = -1;
+        int jA = -1;
+        int timedLabyrinth[][] = new int[n][m];
+        Queue<Position> queue = new LinkedList<>();
+
+        for(int i = 0; i < n; i++){
             for(int j = 0; j < m; j++){
-                char character = row.charAt(j);
-                if(character == 'A'){
-                    Ai = i;
-                    Aj = j;
-                } else if(character == 'M'){
-                    monsters.add(new int[]{i, j});
+                if(labyrinth[i][j] == 'A'){
+                    iA = i;
+                    jA = j;
+                    timedLabyrinth[i][j] = Integer.MAX_VALUE;
+                } else if(labyrinth[i][j] == 'M'){
+                    timedLabyrinth[i][j] = 0;
+                    queue.offer(new Position(i, j));
+                } else {
+                    timedLabyrinth[i][j] = Integer.MAX_VALUE;
                 }
-                grid[i][j] = character;
             }
         }
 
-        Instant start = Instant.now();
-        boolean ans = canReachOutside(Ai, Aj, monsters, n, m, grid);
-        if(!ans){
-            System.out.println("NO");
-        }
-        Instant end = Instant.now();
-        Duration timeElapsed = Duration.between(start, end);
-        System.out.println("Time taken: " + timeElapsed.toSeconds() + " seconds");
-    }
-
-    static StringBuilder path = new StringBuilder();
-    public static boolean canReachOutside(int Ai, int Aj, List<int []> monsters, int row, int col, char grid[][]){
-        if(Ai == 0 || Ai == row - 1 || Aj == 0 || Aj == col - 1){
+        if(iA == 0 || iA == n - 1 || jA == 0 || jA == m - 1){
             System.out.println("YES");
-            System.out.println(path.length());
-            System.out.println(path);
-            return true;
+            System.out.println(0);
+            return;
         }
 
-        for(int k = 0; k < 4; k++){
-            int dAi = Ai + directions[k][0];
-            int dAj = Aj + directions[k][1];
+        int timer = 0;
+        while(!queue.isEmpty()){
+            timer++;
+            int size = queue.size();
+            for(int i = 0; i < size; i++){
+                Position position = queue.remove();
+                int monsterI = position.i;
+                int monsterJ = position.j;
 
-            char newGrid[][] = makeNewGrid(row, col, grid);
+                for(int direction[] : directions){
+                    int dMonsterI = monsterI + direction[0];
+                    int dMonsterJ = monsterJ + direction[1];
 
-            if(grid[dAi][dAj] != '#' && grid[dAi][dAj] != 'M'){
-                path.append(k == 0 ? 'L' : k == 1 ? 'U' : k == 2 ? 'R' : 'D');
-                newGrid[dAi][dAj] = 'A';
+                    if(isValid(dMonsterI, dMonsterJ, n, m) && labyrinth[dMonsterI][dMonsterJ] != '#' && timer < timedLabyrinth[dMonsterI][dMonsterJ]){
+                        timedLabyrinth[dMonsterI][dMonsterJ] = timer;
+                        queue.offer(new Position(dMonsterI, dMonsterJ));
+                    }
+                }
+            }
+        }
 
-                List<int []> newMonsters = new ArrayList<>();
-                for(int monster[] : monsters){
-                    for(int mDirection[] : directions){
-                        int dMi = monster[0] + mDirection[0];
-                        int dMj = monster[1] + mDirection[1];
+        timer = 0;
+        queue.offer(new Position(iA, jA));
+        while(!queue.isEmpty()){
+            timer++;
+            int size = queue.size();
+            for(int i = 0; i < size; i++){
+                Position position = queue.remove();
+                int posI = position.i;
+                int posJ = position.j;
 
-                        if(dMi >= 0 && dMi < row && dMj >= 0 && dMj < col && grid[dMi][dMj] != '#' && grid[dMi][dMj] != 'M' && newGrid[dMi][dMj] != 'M'){
-                            newGrid[dMi][dMj] = 'M';
-                            newMonsters.add(new int[]{dMi, dMj});
+                for(int direction[] : directions){
+                    int dPosI = posI + direction[0];
+                    int dPosJ = posJ + direction[1];
+
+                    if(isValid(dPosI, dPosJ, n, m) && labyrinth[dPosI][dPosJ] != '#' && timer < timedLabyrinth[dPosI][dPosJ]){
+                        timedLabyrinth[dPosI][dPosJ] = timer;
+                        queue.offer(new Position(dPosI, dPosJ));
+                        if(dPosI == 0 || dPosI == n - 1 || dPosJ == 0 || dPosJ == m - 1){
+                            System.out.println("YES");
+                            runPathBFS(dPosI, dPosJ, iA, jA, n, m, timedLabyrinth);
+                            return;
                         }
                     }
                 }
+            }
+        }
+        System.out.println("NO");
+    }
 
-                boolean isPossible = canReachOutside(dAi, dAj, newMonsters, row, col, newGrid);
-                path.deleteCharAt(path.length() - 1);
+    private static void runPathBFS(int i, int j, int iA, int jA, int n, int m, int timedLabyrinth[][]){
+        boolean visited[][] = new boolean[n][m];
+        StringBuilder currPath = new StringBuilder();
+        Queue<Position> queue = new LinkedList<>();
+        queue.offer(new Position(i, j));
 
-                if(isPossible){
-                    return true;
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            for(; size > 0; size--){
+                Position position = queue.remove();
+                int I = position.i;
+                int J = position.j;
+                visited[I][J] = true;
+
+                for(int k = 0; k < 4; k++){
+                    int dI = I + directions[k][0];
+                    int dJ = J + directions[k][1];
+
+                    if(isValid(dI, dJ, n, m) && !visited[dI][dJ] && (timedLabyrinth[I][J] == timedLabyrinth[dI][dJ] + 1 || (dI == iA && dJ == jA))){
+                        currPath.append(k == 0 ? 'D' : k == 1 ? 'L' : k == 2 ? 'U' : 'R');
+                        if((dI == iA && dJ == jA)){
+                            System.out.println(currPath.length());
+                            System.out.println(currPath.reverse());
+                            return;
+                        }
+                        queue.offer(new Position(dI, dJ));
+                        break;
+                    }
                 }
             }
         }
-        return false;
     }
 
-    public static char[][] makeNewGrid(int row, int col, char[][] grid){
-        char[][] newGrid = new char[row][col];
+    /**
+     * Will lead to StackOverflow as the recursion will be too deep
+     */
+    public static void runDFS(int i, int j, int iA, int jA, int n, int m, StringBuilder currPath, int timedLabyrinth[][]){
+        System.out.println(i + " " + j);
+        for(int k = 0; k < 4; k++){
+            int dI = i + directions[k][0];
+            int dJ = j + directions[k][1];
 
-        for(int i = 0; i < row; i++){
-            for(int j = 0; j < col; j++){
-                newGrid[i][j] = grid[i][j];
+            if(isValid(dI, dJ, n, m) && timedLabyrinth[i][j] == timedLabyrinth[dI][dJ] + 1){
+                currPath.append(k == 0 ? 'D' : k == 1 ? 'L' : k == 2 ? 'U' : 'R');
+                if((dI == iA && dJ == jA)){
+                    System.out.println(currPath.length());
+                    System.out.println(currPath.reverse());
+                    return;
+                }
+                runDFS(dI, dJ, iA, jA, n, m, currPath, timedLabyrinth);
+                currPath.deleteCharAt(currPath.length() - 1);
             }
         }
+    }
 
-        return newGrid;
+    private static boolean isValid(int i, int j, int n, int m){
+        return (i >= 0 && i < n && j >= 0 && j < m);
+    }
+
+    static class Position{
+        int i;
+        int j;
+
+        public Position(int i, int j){
+            this.i = i;
+            this.j = j;
+        }
     }
 }
