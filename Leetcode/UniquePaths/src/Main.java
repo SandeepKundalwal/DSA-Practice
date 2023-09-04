@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) {
         int m = 20;
         int n = 13;
-        System.out.println("Number of Unqiue Paths: " + uniquePaths(m, n));
+        System.out.println("Number of Unique Paths: " + uniquePaths(m, n));
     }
 
     private static int uniquePaths(int m, int n) {
