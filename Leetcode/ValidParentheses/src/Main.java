@@ -3,7 +3,7 @@ import java.util.Stack;
 public class Main {
     public static void main(String[] args) {
         String s = "()[]{}";
-        System.out.println(isValid(sadd));
+        System.out.println(isValid(s));
     }
 
     public static boolean isValid(String s) {
