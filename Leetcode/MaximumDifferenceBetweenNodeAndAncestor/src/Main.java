@@ -6,7 +6,8 @@ public class Main {
         System.out.println("Need to make Tree Structure.");
     }
 
-    // n^2 or n^2logn
+    /*********************************************************First Intuition*********************************************************************/
+    // n^2
     public int maxAncestorDiff(TreeNode root) {
         List<TreeNode> allNodes = new ArrayList<>();
         getAllNodes(root, allNodes);
@@ -38,4 +39,27 @@ public class Main {
         getAllNodes(root.left, allNodes);
         getAllNodes(root.right, allNodes);
     }
+    /**************************************************************************************************************************************************/
+
+
+    /************************************************ Optimal Code **************************************************************************/
+    public int maxAncestorDiffOptimal(TreeNode root) {
+        if(root == null) return 0;
+
+        return fOptimal(root, root.val, root.val);
+    }
+
+    public int fOptimal(TreeNode root, int min, int max){
+        if(root == null){
+            return max - min;
+        }
+
+        min = Math.min(min, root.val);
+        max = Math.max(max, root.val);
+        int leftMaxDiff = fOptimal(root.left, min, max);
+        int rightMaxDiff = fOptimal(root.right, min, max);
+
+        return Math.max(leftMaxDiff, rightMaxDiff);
+    }
+    /**************************************************************************************************************************************************/
 }
