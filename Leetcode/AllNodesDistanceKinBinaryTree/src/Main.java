@@ -1,11 +1,12 @@
-import javax.swing.tree.TreeNode;
 import java.util.*;
 
 public class Main {
     public void main(String[] args) {
-        TreeNode root = generateBinaryTree();
-        TreeNode target = new TreeNode(5);
         int k = 2;
+        TreeNode target = new TreeNode(5);
+        Integer nodes[] = {3,5,1,6,2,0,8,null,null,7,4};
+        TreeNode root = TreeNode.generateTree(nodes);
+
         System.out.println(distanceK(root, target, k));
     }
 
@@ -44,7 +45,7 @@ public class Main {
         return kDistanceAway;
     }
 
-    public Map<TreeNode, List<TreeNode>> createGraph(TreeNode root){
+    public static Map<TreeNode, List<TreeNode>> createGraph(TreeNode root){
         Map<TreeNode, List<TreeNode>> graph = new HashMap<>();
         Queue<TreeNode> queue = new LinkedList<>();
         queue.offer(root);
@@ -69,32 +70,9 @@ public class Main {
         return graph;
     }
 
-    public void addEdge(Map<TreeNode, List<TreeNode>> graph, TreeNode node1, TreeNode node2){
+    public static void addEdge(Map<TreeNode, List<TreeNode>> graph, TreeNode node1, TreeNode node2){
         graph.putIfAbsent(node2, new ArrayList<>());
         graph.get(node1).add(node2);
         graph.get(node2).add(node1);
-    }
-
-
-    public TreeNode generateBinaryTree(int[] arr, int i){
-        TreeNode root = null;
-        // Base case for recursion
-        if (i < arr.length) {
-            root = new TreeNode(arr[i] == );
-
-            // insert left child
-            root.left = generateBinaryTree(arr, 2 * i + 1);
-
-            // insert right child
-            root.right = generateBinaryTree(arr, 2 * i + 2);
-        }
-        return root;
-    }
-
-    public class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-        TreeNode(int x) { val = x; }
     }
 }
