@@ -6,26 +6,21 @@ public class Main {
     }
 
     public static int diameterOfBinaryTree(TreeNode root) {
-        return f(root);
+        int maxi[] = new int[1];
+        f(root, maxi);
+        return maxi[0];
     }
 
-    public static int f(TreeNode root){
+    public static int f(TreeNode root, int maxi[]){
         if(root == null){
             return 0;
         }
 
-        int bothHeight = findHeight(root.left) + findHeight(root.right);
-        int leftHeight = f(root.left);
-        int rightHeight = f(root.right);
+        int leftHeight = f(root.left, maxi);
+        int rightHeight = f(root.right, maxi);
 
-        return Math.max(bothHeight, Math.max(leftHeight, rightHeight));
-    }
+        maxi[0] = Math.max(maxi[0], leftHeight + rightHeight);
 
-    public static int findHeight(TreeNode root){
-        if(root == null){
-            return 0;
-        }
-
-        return 1 + Math.max(findHeight(root.left), findHeight(root.right));
+        return 1 + Math.max(leftHeight, rightHeight);
     }
 }
