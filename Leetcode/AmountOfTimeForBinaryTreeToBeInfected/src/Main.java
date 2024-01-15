@@ -9,10 +9,12 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Need to Make Tree Structure.");
+        int start = 3;
+        TreeNode root = TreeNode.generateTree(new Integer[]{1,5,3,null,4,10,6,9,2});
+        System.out.println(amountOfTime(root, start));
     }
 
-    public int amountOfTime(TreeNode root, int start) {
+    public static int amountOfTime(TreeNode root, int start) {
         if(root == null) return 0;
 
         Map<Integer, List<Integer>> graph = new HashMap<>();
@@ -45,7 +47,7 @@ public class Main {
         return minutes;
     }
 
-    public void generateGraph(TreeNode root, Map<Integer, List<Integer>> graph){
+    public static void generateGraph(TreeNode root, Map<Integer, List<Integer>> graph){
         if(root == null){
             return;
         }

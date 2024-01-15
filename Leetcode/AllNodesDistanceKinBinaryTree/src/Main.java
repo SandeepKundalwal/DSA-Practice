@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Main {
-    public void main(String[] args) {
+    public static void main(String[] args) {
         int k = 2;
         TreeNode target = new TreeNode(5);
         Integer nodes[] = {3,5,1,6,2,0,8,null,null,7,4};
