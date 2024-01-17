@@ -11,39 +11,14 @@ public class Main {
         testcases.add(new int[]{2,0,2});
         testcases.add(new int[]{5,4,1,2});
 
+        FirstIntuition firstIntuition = new FirstIntuition();
         for(int i = 0; i < testcases.size(); i++){
-            System.out.println(answers[i] + " == " + trap(testcases.get(i)));
+            System.out.println(answers[i] + " == " + firstIntuition.trap(testcases.get(i)));
         }
-    }
 
-    public static int trap(int[] height) {
-        int trappedWater = 0;
-        for(int i = 0; i < height.length; i++){
-            int maxLeft = maxLeft(i, height);
-            int maxRight = maxRight(i, height);
-            if(maxLeft == 0 || maxRight == 0){
-                continue;
-            } else {
-                int water = (Math.min(maxLeft, maxRight) - height[i]);
-                trappedWater += (water < 0 ? 0 : water);
-            }
+        BetterSolution betterSolution = new BetterSolution();
+        for(int i = 0; i < testcases.size(); i++){
+            System.out.println(answers[i] + " == " + betterSolution.trap(testcases.get(i)));
         }
-        return trappedWater;
-    }
-
-    public static int maxLeft(int idx, int height[]){
-        int maxHeight = 0;
-        for(int i = 0; i < idx; i++){
-            maxHeight = Math.max(maxHeight, height[i]);
-        }
-        return maxHeight;
-    }
-
-    public static int maxRight(int idx, int height[]){
-        int maxHeight = 0;
-        for(int i = idx + 1; i < height.length; i++){
-            maxHeight = Math.max(maxHeight, height[i]);
-        }
-        return maxHeight;
     }
 }
