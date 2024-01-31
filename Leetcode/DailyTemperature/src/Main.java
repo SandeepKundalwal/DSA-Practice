@@ -15,10 +15,8 @@ public class Main {
 
         int result[] = new int[n];
         for(int i = n - 2; i >= 0; i--){
-            if(!stack.isEmpty() && temperatures[i] >= stack.peek().temperature){
-                while(!stack.isEmpty() && temperatures[i] >= stack.peek().temperature){
-                    stack.pop();
-                }
+            while(!stack.isEmpty() && temperatures[i] >= stack.peek().temperature){
+                stack.pop();
             }
             result[i] = stack.isEmpty() ? 0 : stack.peek().index - i;
             stack.push(new TemperatureIndex(i, temperatures[i]));
