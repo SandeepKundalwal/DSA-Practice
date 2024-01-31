@@ -5,6 +5,7 @@ public class Main {
     public static void main(String[] args) {
         int temperatures[] = {30,40,50,60};
         System.out.println(Arrays.toString(dailyTemperatures(temperatures)));
+        System.out.println(Arrays.toString(dailyTemperaturesOptimized(temperatures)));
     }
 
     // Most probably monotonic stack
@@ -32,5 +33,28 @@ public class Main {
             this.index = index;
             this.temperature = temperature;
         }
+    }
+
+    /***********************************************************************************************************/
+    public static int[] dailyTemperaturesOptimized(int[] temperatures) {
+        int n = temperatures.length;
+
+        int hottest = -1;
+        int result[] = new int[n];
+        for(int i = n - 1; i >= 0; i--){
+            if(hottest <= temperatures[i]){
+                hottest = temperatures[i];
+                continue;
+            }
+
+            int days = 1;
+            while(temperatures[i + days] <= temperatures[i]){
+                days += result[i + days];
+            }
+
+            result[i] = days;
+        }
+
+        return result;
     }
 }
