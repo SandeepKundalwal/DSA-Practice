@@ -3,11 +3,34 @@ import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
-        String A = "ilike";
-        List<String> B = List.of("i", "like", "sam", "sung", "samsung", "mobile");
-        System.out.println(wordBreak(A, B));
+//        String A = "leetcode";
+//        List<String> B = List.of("leet", "code");
+//        String A = "catsandog";
+//        List<String> B = List.of("cats","dog","sand","and","cat");
+//        String A = "ilike";
+//        List<String> B = List.of( "i", "like", "sam", "sung", "samsung", "mobile");
+//        String A = "catskicatcats";
+//        List<String> B = List.of("cats","cat","dog","ski");
+
+        String A = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab";
+        List<String> B = List.of("a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa");
+        System.out.println("Memoization: " + wordBreak(A, B));
+        System.out.println("Trie: " + wordBreakTrie(A, B));
     }
 
+    static Trie trie;
+    public static int wordBreakTrie(String A, List<String> B)
+    {
+        trie = new Trie();
+        for(String word : B){
+            trie.insert(word);
+        }
+
+        Map<Integer, Boolean> MEMO = new HashMap<>();
+        return trie.fTrie(0, trie.root, A, MEMO) ? 1 : 0;
+    }
+
+    // Memoization
     public static int wordBreak(String A, List<String> B )
     {
         Set<String> dict = new HashSet<>(B);
