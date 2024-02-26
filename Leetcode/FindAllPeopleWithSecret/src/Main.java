@@ -36,9 +36,7 @@ public class Main {
                 int u = pair[0];
                 int v = pair[1];
 
-                int p_u = dsu.find(u);
-                int p_v = dsu.find(v);
-                if(p_u == 0 || p_v == 0){
+                if(dsu.find(u) == 0 || dsu.find(v) == 0){
                     knows.add(u);
                     knows.add(v);
                 } else {
@@ -51,15 +49,12 @@ public class Main {
     }
 
     static class DSU{
-        int size[];
         int parents[];
 
         public DSU(int n){
-            this.size = new int[n];
             this.parents = new int[n];
 
             for(int i = 0; i < n; i++){
-                this.size[i] = 1;
                 this.parents[i] = i;
             }
         }

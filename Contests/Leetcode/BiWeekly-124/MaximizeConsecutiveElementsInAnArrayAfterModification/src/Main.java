@@ -26,7 +26,7 @@ public class Main {
     }
 
 
-    // TLE after passing 661/668 test cases
+    // TLE: passed 661/668 test cases
     public static int maxSelectedElementsMemoization(int[] nums) {
         Arrays.sort(nums);
 

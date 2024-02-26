@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Main {
     public static void main(String[] args) {
         Node root = Node.generateTree(new Integer[]{67, 34, 82, 12, 45, 78});

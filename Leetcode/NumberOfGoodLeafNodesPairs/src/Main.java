@@ -22,7 +22,7 @@ public class Main {
         }
 
         if(root.left == null && root.right == null){
-            return new ArrayList<>(Arrays.asList(1));
+            return new ArrayList<>(List.of(1));
         }
 
         List<Integer> leftList = f(root.left, distance);

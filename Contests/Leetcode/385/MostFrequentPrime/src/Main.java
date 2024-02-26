@@ -58,7 +58,6 @@ public class Main {
                     hashMap.put(currNo, hashMap.get(currNo) + 1);
                 }
             }
-
         }
     }
 
