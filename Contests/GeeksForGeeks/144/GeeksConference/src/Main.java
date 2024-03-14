@@ -8,7 +8,6 @@ public class Main {
     }
 
     public static ArrayList<Integer> maximumFriends(int N, int[][] arr) {
-        // code here
         int max = 0;
         for(int a[] : arr){
             max = Math.max(max, Math.max(a[0], a[1]));
