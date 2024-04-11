@@ -4,6 +4,7 @@ public class Main {
         System.out.println(minOperations(k));
     }
 
+    // O(k)
     public static int minOperations(int k) {
         int operation = 0;
         int miniOperations = Integer.MAX_VALUE;
@@ -13,5 +14,13 @@ public class Main {
             operation++;
         }
         return miniOperations == Integer.MAX_VALUE ? 0 : miniOperations;
+    }
+
+    // O(sqrt(k))
+    public static int minOperationsOptimized(int k) {
+        int a = (int)Math.ceil(Math.sqrt(k)) - 1;
+        int b = (int)Math.ceil((k * 1.0) / (a + 1)) - 1;
+
+        return a + b;
     }
 }
