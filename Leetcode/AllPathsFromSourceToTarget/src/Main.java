@@ -11,8 +11,6 @@ public class Main {
         int n = graph.length;
         List<List<Integer>> possiblePaths = new ArrayList<>();
 
-        boolean visited[] = new boolean[n];
-
         dfs(0, new boolean[n], new ArrayList<>(), possiblePaths, graph);
 
         return possiblePaths;
