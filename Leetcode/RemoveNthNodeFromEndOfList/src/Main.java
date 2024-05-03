@@ -9,23 +9,27 @@ public class Main {
     }
 
     public static ListNode removeNthFromEnd(ListNode head, int n) {
-        List<ListNode> nodes = new ArrayList<>();
+        ListNode faster = head;
 
-        while(head != null){
-            nodes.add(head);
-            head = head.next;
+        while(n > 0){
+            faster = faster.next;
+            n--;
         }
 
-        int nNodes = nodes.size();
-        int toRemove = nNodes - n;
-
-        // first Node
-        if(toRemove == 0){
-            return nodes.get(toRemove).next;
+        ListNode slower = head;
+        ListNode prevSlower = null;
+        while(faster != null){
+            prevSlower = slower;
+            slower = slower.next;
+            faster = faster.next;
         }
 
-        nodes.get(toRemove - 1).next = nodes.get(toRemove).next;
+        if(prevSlower == null){
+            return slower.next;
+        }
 
-        return nodes.get(0);
+        prevSlower.next = slower.next;
+
+        return head;
     }
 }
