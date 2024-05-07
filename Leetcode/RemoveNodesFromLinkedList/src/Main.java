@@ -7,36 +7,35 @@ public class Main {
     }
 
     public static ListNode removeNodes(ListNode head) {
-        Stack<Integer> stack = new Stack<>();
-        fillStack(head, stack);
+        ListNode reverseHead = reverse(head);
 
-        ListNode newHead = new ListNode(-1);
+        int maxi = reverseHead.val;
+        ListNode newHead = reverseHead;
         ListNode finalHead = newHead;
 
-        while(head != null){
-            if(!stack.isEmpty() && head.val >= stack.peek()){
-                newHead.next = new ListNode(head.val);;
+        ListNode p = reverseHead.next;
+        while(p != null){
+            if(p.val >= maxi){
+                maxi = p.val;
+                newHead.next = p;
                 newHead = newHead.next;
-
-                if(stack.peek() == head.val){
-                    stack.pop();
-                }
             }
-            head = head.next;
+            p = p.next;
         }
+        newHead.next = null;
 
-        return finalHead.next;
+        return reverse(finalHead);
     }
 
-    public static void fillStack(ListNode head, Stack<Integer> stack){
-        if(head == null){
-            return;
+    public static ListNode reverse(ListNode curr){
+        ListNode prev = null;
+        ListNode next = null;
+        while(curr != null){
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
         }
-
-        fillStack(head.next, stack);
-
-        if(stack.isEmpty() || stack.peek() <= head.val){
-            stack.push(head.val);
-        }
+        return prev;
     }
 }
