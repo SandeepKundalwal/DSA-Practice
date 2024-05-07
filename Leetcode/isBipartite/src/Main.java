@@ -9,45 +9,37 @@ public class Main {
     }
 
     public static boolean isBipartite(int[][] graph) {
-        int[] color = new int[graph.length];
-        Arrays.fill(color, -1);
+        int n = graph.length;
+        int colors[] = new int[n];
 
-        // to handle disconnected graph
-        for(int i = 0; i < graph.length; i++){
-            if(color[i] == -1){
-                if(!isGraphBipartite(graph, i, color)){
-                    return false;
+        for(int i = 0; i < n; i++){
+            if(colors[i] != 0) continue;
+
+            Queue<Integer> queue = new LinkedList<>();
+            queue.offer(i);
+            colors[i] = 1;
+
+            while(!queue.isEmpty()){
+                int size = queue.size();
+                for(int j = 0; j < size; j++){
+                    int node = queue.remove();
+                    int color = colors[node];
+                    int colorIt = color == 1 ? 2 : 1;
+
+                    for(int neighbor : graph[node]){
+                        if(color == colors[neighbor]){
+                            return false;
+                        }
+
+                        if(colors[neighbor] == 0){
+                            colors[neighbor] = colorIt;
+                            queue.offer(neighbor);
+                        }
+                    }
                 }
             }
         }
-        return true;
-    }
 
-    /**
-     * using BFS
-     * @param graph given graph
-     * @param src source vertex
-     * @param color color array that represents the color of each vertex
-     * @return whether the given connected component is bipartite or not
-     */
-    public static boolean isGraphBipartite(int[][] graph, int src, int[] color){
-        color[src] = 1;
-
-        Queue<Integer> queue = new LinkedList<>();
-        queue.add(src);
-
-        while(!queue.isEmpty()){
-            int u = queue.remove();
-            for(int v : graph[u]){
-                // System.out.println("u:" + u + " v: " + v + " color[u]: " + color[u] + " color[v]: " + color[v]);
-                if(color[v] == -1){
-                    queue.add(v);
-                    color[v] = 1 - color[u];
-                } else if (color[v] == color[u]){
-                    return false;
-                }
-            }
-        }
         return true;
     }
 }
