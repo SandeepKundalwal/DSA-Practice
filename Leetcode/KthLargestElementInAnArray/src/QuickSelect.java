@@ -1,43 +1,42 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 public class QuickSelect {
     public static int findKthLargest(int[] nums, int k) {
-        List<Integer> list = new ArrayList<>();
-        for (int num: nums) {
-            list.add(num);
-        }
-
-        return quickSelect(list, k);
+        return quickSort(0, nums.length - 1, nums, k);
     }
 
-    public static int quickSelect(List<Integer> nums, int k) {
-        int pivotIndex = new Random().nextInt(nums.size());
-        int pivot = nums.get(pivotIndex);
+    public static int quickSort(int start, int end, int nums[], int k){
+        int kthSmallest = -100001;
+        if(start <= end){
+            int pivot = findPivot(start, end, nums);
 
-        List<Integer> left = new ArrayList<>();
-        List<Integer> mid = new ArrayList<>();
-        List<Integer> right = new ArrayList<>();
-
-        for (int num: nums) {
-            if (num > pivot) {
-                left.add(num);
-            } else if (num < pivot) {
-                right.add(num);
+            if(nums.length - k == pivot){
+                return nums[pivot];
+            } else if(pivot < nums.length - k){
+                kthSmallest = quickSort(pivot + 1, end, nums, k);
             } else {
-                mid.add(num);
+                kthSmallest = quickSort(start, pivot - 1, nums, k);
             }
         }
+        return kthSmallest;
+    }
 
-        if (k <= left.size()) {
-            return quickSelect(left, k);
+    public static int findPivot(int start, int end, int nums[]){
+        int pivot = nums[end];
+
+        int idx = start - 1;
+        for(int i = start; i <= end - 1; i++){
+            if(nums[i] < pivot){
+                idx++;
+                swap(idx, i, nums);
+            }
         }
+        idx++;
+        swap(idx, end, nums);
+        return idx;
+    }
 
-        if (left.size() + mid.size() < k) {
-            return quickSelect(right, k - left.size() - mid.size());
-        }
-
-        return pivot;
+    public static void swap(int i, int j, int nums[]){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
     }
 }
