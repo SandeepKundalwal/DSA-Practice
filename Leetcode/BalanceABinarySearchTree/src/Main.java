@@ -8,32 +8,32 @@ public class Main {
     }
 
     public static TreeNode balanceBST(TreeNode root) {
-        List<Integer> allNodes = new ArrayList<>();
+        List<TreeNode> allNodes = new ArrayList<>();
         getAllNodes(root, allNodes);
 
         return f(allNodes, 0, allNodes.size() - 1);
     }
 
-    public static TreeNode f(List<Integer> allNodes, int start, int end){
+    public static TreeNode f(List<TreeNode> allNodes, int start, int end){
         if(start > end){
             return null;
         }
 
         int middle = (end + start) / 2;
-        TreeNode root = new TreeNode(allNodes.get(middle));
+        TreeNode root = allNodes.get(middle);
         root.left = f(allNodes, start, middle - 1);
         root.right = f(allNodes, middle + 1, end);
 
         return root;
     }
 
-    public static void getAllNodes(TreeNode root, List<Integer> allNodes){
+    public static void getAllNodes(TreeNode root, List<TreeNode> allNodes){
         if(root == null){
             return;
         }
 
         getAllNodes(root.left, allNodes);
-        allNodes.add(root.val);
+        allNodes.add(root);
         getAllNodes(root.right, allNodes);
     }
 }
