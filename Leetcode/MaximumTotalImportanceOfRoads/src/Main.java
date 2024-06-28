@@ -8,46 +8,22 @@ public class Main {
     }
 
     public static long maximumImportance(int n, int[][] roads) {
-        int indegree[] = new int[n];
-
+        long degree[] = new long[n];
         for(int road[] : roads){
             int u = road[0];
             int v = road[1];
 
-            indegree[u]++;
-            indegree[v]++;
+            degree[u]++;
+            degree[v]++;
         }
 
-        Pair idxDegree[] = new Pair[n];
-        for(int i = 0; i < n; i++){
-            idxDegree[i] = new Pair(i, indegree[i], 0);
-        }
-
-        Arrays.sort(idxDegree, (a, b) -> (a.indegree - b.indegree));
-
-        for(int i = 0; i < n; i++){
-            idxDegree[i].importance = i + 1;
-        }
-
-        Arrays.sort(idxDegree, (a, b) -> (a.idx - b.idx));
+        Arrays.sort(degree);
 
         Long totalImportance = 0L;
-        for(int road[] : roads){
-            totalImportance += (idxDegree[road[0]].importance + idxDegree[road[1]].importance);
+        for(int i = 0; i < n; i++){
+            totalImportance += (degree[i] * (i + 1));
         }
 
         return totalImportance;
-    }
-
-    static class Pair{
-        int idx;
-        int indegree;
-        int importance;
-
-        public Pair(int idx, int indegree, int importance){
-            this.idx = idx;
-            this.indegree = indegree;
-            this.importance = importance;
-        }
     }
 }
