@@ -21,6 +21,7 @@ public class Main {
         for(int edge[] : edges){
             int u = edge[0];
             int v = edge[1];
+
             graph[v].add(u);
         }
 
@@ -28,31 +29,26 @@ public class Main {
 
         for(int i = 0; i < n; i++){
             answer.add(new ArrayList<>());
-            Set<Integer> visited = new HashSet<>();
-            List<Integer> ancestors = new ArrayList<>();
+            boolean visited[] = new boolean[n];
 
-            findAncestors(i, graph, ancestors, visited);
+            findAncestors(i, graph, visited);
 
             // find a way to add to the answer
-            Collections.sort(ancestors);
-            for(int j = 0; j < ancestors.size(); j++){
-                if(j != 0 && ancestors.get(j - 1) == ancestors.get(j)){
-                    continue;
-                }
-                answer.get(i).add(ancestors.get(j));
+            visited[i] = false;
+            for(int j = 0; j < n; j++){
+                if(visited[j] == false) continue;
+                answer.get(i).add(j);
             }
         }
 
         return answer;
     }
 
-    public static void findAncestors(int src, List<Integer> graph[], List<Integer> ancestors, Set<Integer> visited){
-        visited.add(src);
+    public static void findAncestors(int src, List<Integer> graph[], boolean visited[]){
+        visited[src] = true;
         for(int neighbor : graph[src]){
-            if(visited.contains(neighbor)) continue;
-
-            ancestors.add(neighbor);
-            findAncestors(neighbor, graph, ancestors, visited);
+            if(visited[neighbor]) continue;
+            findAncestors(neighbor, graph, visited);
         }
     }
 }
