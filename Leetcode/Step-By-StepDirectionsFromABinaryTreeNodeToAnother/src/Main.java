@@ -5,14 +5,74 @@ import java.util.HashMap;
 
 public class Main {
     static String shortestPath;
+    static StringBuilder shortestPathSB;
     public static void main(String[] args) {
         TreeNode root = TreeNode.generateTree(new Integer[]{5,1,2,3,null,6,4});
         int startValue = 3;
         int destValue = 6;
-        System.out.println(getDirections(root, startValue, destValue));
+        System.out.println("Using LCA: " + getDirections(root, startValue, destValue));
+        System.out.println("Using HashMap: " + getDirectionsHashMap(root, startValue, destValue));
     }
 
     public static String getDirections(TreeNode root, int startValue, int destValue) {
+        shortestPathSB = new StringBuilder();
+
+        TreeNode LCA = findLCA(root, startValue, destValue);
+
+        if(LCA.val == startValue){
+            traverse(LCA, new StringBuilder(), false, destValue);
+        } else if(LCA.val == destValue){
+            traverse(LCA, new StringBuilder(), true, startValue);
+        } else {
+            traverse(LCA, new StringBuilder(), true, startValue);
+            traverse(LCA, new StringBuilder(), false, destValue);
+        }
+
+        return shortestPathSB.toString();
+    }
+
+    public static void traverse(TreeNode root, StringBuilder path, boolean goingUp, int value){
+        if(root.val == value){
+            shortestPathSB.append(path.toString());
+            return;
+        }
+
+        if(root.left != null){
+            path.append(goingUp ? "U" : "L");
+            traverse(root.left, path, goingUp, value);
+            path.deleteCharAt(path.length() - 1);
+        }
+
+        if(root.right != null){
+            path.append(goingUp ? "U" : "R");
+            traverse(root.right, path, goingUp, value);
+            path.deleteCharAt(path.length() - 1);
+        }
+    }
+
+    public static TreeNode findLCA(TreeNode root, int startValue, int destValue){
+        if(root == null || root.val == startValue || root.val == destValue){
+            return root;
+        }
+
+        TreeNode left = findLCA(root.left, startValue, destValue);
+        TreeNode right = findLCA(root.right, startValue, destValue);
+
+        if(left == null){
+            return right;
+        }
+
+        if(right == null){
+            return left;
+        }
+
+        return root;
+    }
+
+    /*
+    Using HashMap and HashSet
+     */
+    public static String getDirectionsHashMap(TreeNode root, int startValue, int destValue) {
         shortestPath = new String();
         Map<Integer, Directions> nodes = new HashMap<>();
         createTree(root, -1, nodes);
