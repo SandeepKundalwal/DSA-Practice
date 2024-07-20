@@ -12,21 +12,23 @@ public class Main {
         int gCounts[] = new int[10];
         int bulls = 0, cows = 0;
         for(int i = 0; i < n; i++){
-            if(secret.charAt(i) == guess.charAt(i)){
+            char s = secret.charAt(i);
+            char g = guess.charAt(i);
+            if(s == g){
                 bulls++;
             } else {
-                if(sCounts[guess.charAt(i) - '0'] > 0){
+                if(sCounts[g - '0'] > 0){
                     cows++;
-                    sCounts[guess.charAt(i) - '0']--;
+                    sCounts[g - '0']--;
                 } else {
-                    gCounts[guess.charAt(i) - '0']++;
+                    gCounts[g - '0']++;
                 }
 
-                if(gCounts[secret.charAt(i) - '0'] > 0){
+                if(gCounts[s - '0'] > 0){
                     cows++;
-                    gCounts[secret.charAt(i) - '0']--;
+                    gCounts[s - '0']--;
                 } else {
-                    sCounts[secret.charAt(i) - '0']++;
+                    sCounts[s - '0']++;
                 }
             }
         }
